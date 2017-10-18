@@ -9,7 +9,8 @@
 <%
 
 if(tags.length){
-  var hasParams = false, hasReturn = false, hasType = false;    -%>
+  var hasParams = false, hasReturn = false, hasType = false, 
+  hasTypedef = false, hasProperties = false;                    -%>
 <div class="details">
 <%
   tags.forEach(function(tag){
@@ -30,7 +31,38 @@ if(tags.length){
 </div>
 <%  }
 
-    if(tag.type == 'return'){
+    if(tag.type == 'typedef'){
+      if(!hasTypedef){
+        hasTypedef = true;                                       -%>
+<div class="dox_tag_title">Type Definition</div>
+<%    }                                                         -%>
+<div class="dox_tag_detail">
+<span class="dox_tag_name"><%= tag.string %></span>
+
+<%    if(tag.description){                                      -%>
+<span><%- md(tag.description, true) %></span>
+<%    }                                                         -%>
+</div>
+<%  }
+
+    if(tag.type == 'property'){
+      if(!hasProperties){
+        hasProperties = true;                                   -%>
+<div class="dox_tag_title">Properties</div>
+<%    }                                                         -%>
+<div class="dox_tag_detail">
+<span class="dox_tag_name"><%= tag.name %></span>
+<%    (tag.types || []).forEach(function(type){                 -%>
+<span class="dox_type"><%= type %></span>
+<%    });
+
+      if(tag.description){                                      -%>
+<span><%- md(tag.description, true) %></span>
+<%    }                                                         -%>
+</div>
+<%  }
+
+    if(tag.type == 'return' || tag.type == 'returns'){
       if(!hasReturn){
         hasReturn = true;                                       -%>
 <div class="dox_tag_title">Returns</div>
