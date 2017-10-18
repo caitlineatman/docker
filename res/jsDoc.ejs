@@ -10,7 +10,9 @@
 
 if(tags.length){
   var hasParams = false, hasReturn = false, hasType = false, 
-  hasTypedef = false, hasProperties = false;                    -%>
+  hasTypedef = false, typedefName = null,  
+  hasProperties = false;                                        -%>
+
 <div class="details">
 <%
   tags.forEach(function(tag){
@@ -31,15 +33,16 @@ if(tags.length){
 </div>
 <%  }
 
-    if(tag.type == 'typedef'){
-      if(!hasTypedef){
-        hasTypedef = true;                                       -%>
-<div class="dox_tag_title">Type Definition</div>
-<%    }                                                         -%>
+    if(tag.type == 'typedef'){                                  -%>
+<div class="dox_tag_title">Type Definition</div>  
 <div class="dox_tag_detail">
-<span class="dox_tag_name"><%= tag.string %></span>
+<%    typedefName = tag.string.replace(/\{([^\}]*)\}/g, "");    -%>
+<span class="dox_tag_name"><%= typedefName %></span>
+<%    (tag.types || []).forEach(function(type){                 -%>
+<span class="dox_type"><%= type %></span>
+<%    });
 
-<%    if(tag.description){                                      -%>
+      if(tag.description){                                      -%>
 <span><%- md(tag.description, true) %></span>
 <%    }                                                         -%>
 </div>
